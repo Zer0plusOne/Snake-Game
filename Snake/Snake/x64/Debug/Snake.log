@@ -1,0 +1,5 @@
+﻿  keyboard.cpp
+  main.cpp
+C:\Users\AlexPerezRuiz\Downloads\Snake\Snake\Snake\main.cpp(7,13): warning C4326: return type of 'main' should be 'int' instead of 'void'
+  Generating Code...
+  Snake.vcxproj -> C:\Users\AlexPerezRuiz\Downloads\Snake\Snake\x64\Debug\Snake.exe
