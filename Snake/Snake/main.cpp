@@ -1,69 +1,71 @@
-#define FRAME_RATE 150
+#define FRAME_RATE 15
 
-#include <iostream>
-#include <thread>
-#include <chrono>
-#include "keyboard.h" // Incluir el header de control del teclado
+#include <iostream> // libreria para el input y output de datos
+#include <thread> // se utiliza desde la "base" proporcionada por el profesor para la funcionalidad de refrescar la pantalla
+#include <chrono> // para poder utilizar valores numericos de tiempo (horas, minutos, segundos...)
+#include "keyboard.h" // header de control del teclado proporcionado por el profesor
 
-using namespace std;
+using namespace std; // para evitar tener que poner " std:: " al principio del uso de cualquier libreria STANDARD
 
-enum Direction { STOP = 0, LEFT, RIGHT, UP, DOWN };
-Direction dir = STOP;
+enum Direction { STOP = 0, LEFT, RIGHT, UP, DOWN }; // definimos los posibles movimientos de la serpiente
+Direction dir = STOP; // dejamos la direccion en STOP desde este momento para que l aserpiente se empiece a mover desde que el usuario presione "W, A, S o D"
 
-const int width = 20;
-const int height = 20;
-int x, y, fruitX, fruitY, score;
-int tailX[100], tailY[100];
-int nTail = 0;
-bool gameOver = false;
+const int ancho = 20; // defino el ancho del tablero
+const int altura = 20; // defino la altura del tablero
+int x, y, fruitX, fruitY, punt; // variables necesarias para la posicion general, posicion de la fruta y la puntuacion
+int tailX[100], tailY[100]; // no utilizo vectores porque segun el tama√±o total del tablero la serpiente puede tener un valor maximo
+int nTail = 0; // valor inicial (valores de la cola) de las "x" que van detras de la inicial
+bool gameOver = false; // para el bucle jugable del juego (si es "TRUE" inica el final del juego) [ESTO ES SOLO LA INICIALIZACION DE LA VARIABLE]
 
-void Setup() {
-    gameOver = false;
-    dir = STOP;
-    x = width / 2;
-    y = height / 2;
-    fruitX = rand() % width; // PosiciÛn aleatoria de la fruta
-    fruitY = rand() % height;
-    score = 0;
+void gameSetup() {
+
+    /* las variables que no se inicializan aqui es porque han sido inicializadas anteriormente */
+
+
+    x = ancho / 2; // para que la posicion inicial de la serpiente sea el medio del tablero (eje x)
+    y = altura / 2; // para que la posicion inicial de la serpiente sea el medio del tablero (eje y)
+    fruitX = rand() % ancho; // posici√≥n aleatoria de la fruta (eje X)
+    fruitY = rand() % altura; // posicion aleatoria de la fruta (eje Y)
+    punt = 0; // iniciamos la variable almacenando el valor 0 (anteriormente estaba vacia)
 }
 
-void Draw() {
+void gameStartDraw() {
 
     system("cls"); // Limpia la consola
-    for (int i = 0; i < width + 2; i++)
+    for (int i = 0; i < ancho + 2; i++)
         cout << "-";
     cout << endl;
 
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
+    for (int i = 0; i < altura; i++) {
+        for (int j = 0; j < ancho; j++) {
             if (j == 0)
                 cout << "|";
             if (i == y && j == x)
-                cout << "X "; // AÒade un espacio extra para la serpiente
+                cout << "X "; // A√±ade un espacio extra para la serpiente
             else if (i == fruitY && j == fruitX)
-                cout << "O "; // AÒade un espacio extra para la fruta
+                cout << "O "; // A√±ade un espacio extra para la fruta
             else {
                 bool print = false;
                 for (int k = 0; k < nTail; k++) {
                     if (tailX[k] == j && tailY[k] == i) {
-                        cout << "x "; // AÒade un espacio extra para la cola
+                        cout << "x "; // A√±ade un espacio extra para la cola
                         print = true;
                     }
                 }
                 if (!print)
-                    cout << "  "; // AÒade dos espacios para las celdas vacÌas
+                    cout << "  "; // A√±ade dos espacios para las celdas vac√≠as
             }
-            if (j == width - 1)
+            if (j == ancho - 1)
                 cout << "|";
         }
         cout << endl;
     }
 
-    for (int i = 0; i < width + 2; i++)
+    for (int i = 0; i < ancho + 2; i++)
         cout << "-";
     cout << endl;
 
-    cout << "Score: " << score << endl;
+    cout << "Score: " << punt << endl;
 }
 
 void Input() {
@@ -73,7 +75,7 @@ void Input() {
     else if (IsSPressed()) dir = DOWN;
 }
 
-// AÒadir aquÌ las variables globales y la inicializaciÛn del juego (ver ejemplos anteriores)
+// A√±adir aqu√≠ las variables globales y la inicializaci√≥n del juego (ver ejemplos anteriores)
 void Logic() {
     int prevX = tailX[0];
     int prevY = tailY[0];
@@ -104,36 +106,36 @@ void Logic() {
     default:
         break;
     }
-    if (x >= width) x = 0; else if (x < 0) x = width - 1;
-    if (y >= height) y = 0; else if (y < 0) y = height - 1;
+    if (x >= ancho) x = 0; else if (x < 0) x = ancho - 1;
+    if (y >= altura) y = 0; else if (y < 0) y = altura - 1;
 
     for (int i = 0; i < nTail; i++)
         if (tailX[i] == x && tailY[i] == y)
             gameOver = true;
 
     if (x == fruitX && y == fruitY) {
-        score += 10;
-        fruitX = rand() % width;
-        fruitY = rand() % height;
+        punt += 10;
+        fruitX = rand() % ancho;
+        fruitY = rand() % altura;
         nTail++;
     }
 }
 
 int main() {
-    Setup(); // Inicializar el juego
+    gameSetup(); // Inicializar el juego
 
     bool bGameOver = false;
 
     while (!bGameOver) {
-        Draw(); // Dibujar el tablero y la serpiente
+        gameStartDraw(); // Dibujar el tablero y la serpiente
         Input(); // Manejar la entrada del usuario
-        Logic(); // Actualizar la lÛgica del juego
+        Logic(); // Actualizar la l√≥gica del juego
 
         //Sleep main thread to control game speed execution
         std::this_thread::sleep_for(std::chrono::milliseconds(FRAME_RATE));
 
-        if (gameOver) bGameOver = true; // Actualizar la condiciÛn de terminaciÛn basada en la lÛgica del juego
+        if (gameOver) bGameOver = true; // Actualizar la condici√≥n de terminaci√≥n basada en la l√≥gica del juego
     }
 
-    return 0; // AÒadido para corregir el est·ndar de retorno de main.
+    return 0; // A√±adido para corregir el est√°ndar de retorno de main.
 }
