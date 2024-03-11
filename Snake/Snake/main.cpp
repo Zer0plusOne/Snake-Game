@@ -14,7 +14,7 @@ const int ancho = 20; // defino el ancho del tablero
 const int altura = 20; // defino la altura del tablero
 int x, y, fruitX, fruitY, punt; // variables necesarias para la posicion general, posicion de la fruta y la puntuacion
 int tailX[100], tailY[100]; // no utilizo vectores porque segun el tamaño total del tablero la serpiente puede tener un valor maximo
-int nTail = 0; // valor inicial (valores de la cola) de las "x" que van detras de la inicial
+int numberTail = 0; // valor inicial (valores de la cola) de las "x" que van detras de la inicial
 bool gameOver = false; // para el bucle jugable del juego (si es "TRUE" inica el final del juego) [ESTO ES SOLO LA INICIALIZACION DE LA VARIABLE]
 
 void gameSetup() {
@@ -88,22 +88,22 @@ void gameLogic() {
 
     /* serpiente inicial */
 
-    int prevX = tailX[0]; // variable para inicializar la posicion de la cola de la serpiente (la serpiente) en el eje X
-    int prevY = tailY[0]; // variable para inicializar la posicion de la cola de la serpiente (la serpiente) en el eje y
+    int colitaX = tailX[0]; // variable para inicializar la posicion de la cola de la serpiente (la serpiente) en el eje X
+    int colitaY = tailY[0]; // variable para inicializar la posicion de la cola de la serpiente (la serpiente) en el eje y
 
     /* serpiente in game */
 
-    int prev2X, prev2Y; // inicializamos las variables que serviran para almacenar las coordenadas previas de los segmentos de la cola mientras esta se mueve
+    int colita2X, colita2Y; // inicializamos las variables que serviran para almacenar las coordenadas previas de los segmentos de la cola mientras esta se mueve
     tailX[0] = x; // para que coincida con la posicion actual del movimiento con la impresion de la serpiente en el eje x
     tailY[0] = y; // para que coincida con la posicion actual del movimiento con la impresion de la serpiente en el eje y
 
     for (int i = 1; i < nTail; i++) { // iteramos cada segmento de la serpiente (menos el de incide 0 porque es la cabeza)
-        prev2X = tailX[i]; // actualizamos segun la direccion en la que se encuentre en ese frame en el eje X
-        prev2Y = tailY[i]; // actualizamos segun la direccion en la que se encuentre en ese frame en el eje Y
-        tailX[i] = prevX; // justo despues realizamos lo mismo pero para toda la cola en el eje X
-        tailY[i] = prevY; // justo despues realizamos lo mismo pero para toda la cola en el eje X
-        prevX = prev2X;
-        prevY = prev2Y;
+        colita2X = tailX[i]; // actualizamos segun la direccion en la que se encuentre en ese frame en el eje X
+        colita2Y = tailY[i]; // actualizamos segun la direccion en la que se encuentre en ese frame en el eje Y
+        tailX[i] = colitaX; // justo despues realizamos lo mismo pero para toda la cola en el eje X
+        tailY[i] = colitaY; // justo despues realizamos lo mismo pero para toda la cola en el eje X
+        colitaX = colita2X;
+        colitaY = colita2Y;
     }
     switch (dir) { // iniciamos un switch (es lo mejor que se me ha ocurrido) para las direcciones, indicando que pasa cuando la variable "dir" esta en alguno de los casos de abajo
     case LEFT:
@@ -148,7 +148,7 @@ void gameLogic() {
         punt += 10; // se le suman 10 puntos a la variable que almacena la puntuacion
         fruitX = rand() % ancho; // se generan nuevas coordenadas en el eje X para la fruta
         fruitY = rand() % altura; // se generan nuevas coordenadas en el eje Y para la fruta
-        nTail++; // se suma 1 caracter mas a la cola de la serpiente
+        numberTail++; // se suma 1 caracter mas a la cola de la serpiente
     }
 }
 
