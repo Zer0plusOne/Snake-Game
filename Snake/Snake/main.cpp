@@ -33,7 +33,7 @@ void gameStartDraw() {
 
     system("cls"); // para dar la ilusion de la pantalla se actualiza en directo y no parezca una novela grafica
 
-    for (int i = 0; i < ancho * 2 + 1 ; i++) { // idicamos que queremos rellenar de guiones la parte superior de manera que mientras i sea menor al doble + 1 del ancho (recordemos que hemos rellenado de *2* espacios el tablero)
+    for (int i = 0; i < ancho * 2 + 1; i++) { // idicamos que queremos rellenar de guiones la parte superior de manera que mientras i sea menor al doble + 1 del ancho (recordemos que hemos rellenado de *2* espacios el tablero)
         cout << "-"; // rellena con guiones
     }
     cout << endl; // saltito de linia necesario para que no se junte con el tablero para luego no molestar a la hora de rellenar los bordes
@@ -51,7 +51,7 @@ void gameStartDraw() {
             }
             else { // siempre que  "a" (no puedo usar i porque ya esta usada y estoy dentro de su bucle) NO sea menor al ancho...
                 bool cola = false; // declaramos una variable que se encargara de comprovar si la cola esta donde debe de estar
-                for (int b = 0; b < nTail; b++) { // para toquetear el tablero pero en este caso para ver donde se pone la cola de la serpiente
+                for (int b = 0; b < numberTail; b++) { // para toquetear el tablero pero en este caso para ver donde se pone la cola de la serpiente
                     if (tailX[b] == a && tailY[b] == i) { // si la coodenada de la cola en x y y es igual...
                         cout << "x "; // imprimimos el valor de la cola (una X pero minuscula)
                         cola = true; // terminamos de imprimir por ahora ya que no hay nada que nos indique que necesitamos imprimir mas colas
@@ -97,7 +97,7 @@ void gameLogic() {
     tailX[0] = x; // para que coincida con la posicion actual del movimiento con la impresion de la serpiente en el eje x
     tailY[0] = y; // para que coincida con la posicion actual del movimiento con la impresion de la serpiente en el eje y
 
-    for (int i = 1; i < nTail; i++) { // iteramos cada segmento de la serpiente (menos el de incide 0 porque es la cabeza)
+    for (int i = 1; i < numberTail; i++) { // iteramos cada segmento de la serpiente (menos el de incide 0 porque es la cabeza)
         colita2X = tailX[i]; // actualizamos segun la direccion en la que se encuentre en ese frame en el eje X
         colita2Y = tailY[i]; // actualizamos segun la direccion en la que se encuentre en ese frame en el eje Y
         tailX[i] = colitaX; // justo despues realizamos lo mismo pero para toda la cola en el eje X
@@ -123,7 +123,7 @@ void gameLogic() {
     /* ESTE BLOQUE ESTABA HECHO PARA DEBUG, ELIMINARLO O COMENTARLO DEBERIA SUPONER QUE LA SERPIENTE MUERA AL TOCAR LOS BORDES DE LA PANTALLA */
 
     // BLOQUE DE DEBUG: este bloque (porque me has dicho que lo deje Alex) es lo que hace que la serpiente en caso de entrar en el borde de la pantalla salga por el lado opuesto, a continuacion comento lo que hace cada cosa.
-    
+
     if (x >= ancho) { // en caso de que la coordenada X sea mayor o igual al ancho del tablero...
         x = 0; // cambiamos la coordenada X por un 0
     }
@@ -138,7 +138,7 @@ void gameLogic() {
     }
 
     // este bucle comprueba por cada frame que las coordenadas de la cabeza y de la cola no coincidan en ningun punto, en caso de hacerlo...
-    for (int i = 0; i < nTail; i++) {
+    for (int i = 0; i < numberTail; i++) {
         if (tailX[i] == x && tailY[i] == y) { // en caso de que las coordenadas de la cabeza coincidan con alguna de las posiciones en la cola...
             gameOver = true; // cambiamos el valor a true del boolean que indica el GAME OVER
         }
@@ -163,7 +163,7 @@ int main() {
         gameStartDraw(); // dibujamos el tablero, la serpiente y todo lo que se cante
 
         userInput(); // manejamos el input del usuario para que por cada iteracion de este bucle se actualice posteriormente }
-                                                                                                                          /*EL ORDEN DE ESTOS TIENE QUE SER ASI PORQUE SINO NO FUNCIONA*/
+        /*EL ORDEN DE ESTOS TIENE QUE SER ASI PORQUE SINO NO FUNCIONA*/
         gameLogic(); // actualizamos la logica del juego para que con el siguente frame se actualice todo de manera correcta }
 
         //Sleep main thread to control game speed execution
