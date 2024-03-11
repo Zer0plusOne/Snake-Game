@@ -1,4 +1,15 @@
-#define FRAME_RATE 15
+/*
+Title: Snake_Game
+Author: Guillermo Gomez Sanchez
+Feat: ChatGPT & Guiris de Stackoverflow
+Documentation: https://stackoverflow.com/questions/12183008/how-to-use-enums-in-c
+               https://stackoverflow.com/questions/6442328/what-is-the-difference-between-define-and-const
+               https://github.com/KaranJagtiani/Snake-Game-in-CPP
+               https://github.com/leimao/Console-Snake/
+               https://www.youtube.com/watch?reload=9&time_continue=5038&v=AxrQje7V65o // Este me ha servido de inspiracion para el tema de que a serpiente aparezca en el otro lado de la pantalla
+*/
+
+#define FRAME_RATE 25 // mas pequeño == mas fps == mas rapido todo
 
 #include <iostream> // libreria para el input y output de datos
 #include <thread> // se utiliza desde la "base" proporcionada por el profesor para la funcionalidad de refrescar la pantalla
@@ -7,35 +18,39 @@
 
 using namespace std; // para evitar tener que poner " std:: " al principio del uso de cualquier libreria STANDARD
 
-enum Direction { STOP = 0, LEFT, RIGHT, UP, DOWN }; // definimos los posibles movimientos de la serpiente
-Direction dir = STOP; // dejamos la direccion en STOP desde este momento para que l aserpiente se empiece a mover desde que el usuario presione "W, A, S o D"
+const enum Direction { STOP = 0, IZQ, DER, UP, DOWN }; // definimos los posibles movimientos de la serpiente (se utiliza enum para poder utilizar un switch case mas adelante) && (utilizo const para poder trabajar con lo interior)
+Direction dir = STOP; // dejamos la direccion en STOP desde este momento para que la serpiente se empiece a mover desde que el usuario presione "W, A, S o D"
 
-const int ancho = 20; // defino el ancho del tablero
-const int altura = 20; // defino la altura del tablero
-int x, y, fruitX, fruitY, punt; // variables necesarias para la posicion general, posicion de la fruta y la puntuacion
-int tailX[100], tailY[100]; // no utilizo vectores porque segun el tamaño total del tablero la serpiente puede tener un valor maximo
-int numberTail = 0; // valor inicial (valores de la cola) de las "x" que van detras de la inicial
+const int ancho = 20; // defino el ancho del tablero    \
+                                                         -Utilizo constantes ya que sino no se me permite operar con ellas mas adelante (#define no me deja utilizarlos como valores dentro de operacoines)
+const int altura = 10; // defino la altura del tablero  /
+
+/* Variables para la serpiente */
+int tailX[200], tailY[200]; // no utilizo vectores porque segun el tamaño total del tablero la serpiente puede tener un valor maximo (en este caso al ser 20*10, su tamaño maximo sera de 200)
+int numberTail = 0; // valor inicial (valores de la cola) de las "x" que van detras de la Mayuscula
+
+/* Variables para el desarrollo del juego */
+
+int x = ancho / 2; // para que la posicion inicial de la serpiente sea el medio del tablero (eje x)
+int y = altura / 2; // para que la posicion inicial de la serpiente sea el medio del tablero (eje y)
+int fruitX = rand() % ancho; // posición aleatoria de la fruta (eje X)
+int fruitY = rand() % altura; // posicion aleatoria de la fruta (eje Y)
+int punt = 0; // iniciamos la variable almacenando el valor 0 (anteriormente estaba vacia)
 bool gameOver = false; // para el bucle jugable del juego (si es "TRUE" inica el final del juego) [ESTO ES SOLO LA INICIALIZACION DE LA VARIABLE]
 
-void gameSetup() {
+void bordesSuperiorInferior() {
 
-    /* las variables que no se inicializan aqui es porque han sido inicializadas anteriormente */
-
-
-    x = ancho / 2; // para que la posicion inicial de la serpiente sea el medio del tablero (eje x)
-    y = altura / 2; // para que la posicion inicial de la serpiente sea el medio del tablero (eje y)
-    fruitX = rand() % ancho; // posición aleatoria de la fruta (eje X)
-    fruitY = rand() % altura; // posicion aleatoria de la fruta (eje Y)
-    punt = 0; // iniciamos la variable almacenando el valor 0 (anteriormente estaba vacia)
+    for (int i = 0; i < ancho * 2 + 1; i++) { // idicamos que queremos rellenar de guiones la parte superior de manera que mientras i sea menor al doble + 1 del ancho (recordemos que hemos rellenado de *2* espacios el tablero)
+        cout << "-"; // rellena con guiones
+    }
 }
 
 void gameStartDraw() {
 
     system("cls"); // para dar la ilusion de la pantalla se actualiza en directo y no parezca una novela grafica
+    
+    bordesSuperiorInferior();
 
-    for (int i = 0; i < ancho * 2 + 1; i++) { // idicamos que queremos rellenar de guiones la parte superior de manera que mientras i sea menor al doble + 1 del ancho (recordemos que hemos rellenado de *2* espacios el tablero)
-        cout << "-"; // rellena con guiones
-    }
     cout << endl; // saltito de linia necesario para que no se junte con el tablero para luego no molestar a la hora de rellenar los bordes
 
     for (int i = 0; i < altura; i++) { // bucle para toquetear cada fila del tablero
@@ -62,25 +77,33 @@ void gameStartDraw() {
                 }
             }
             if (a == ancho - 1) { // imprimimos el borde derecho
-                cout << "|"; // caracter del bode derecho
+                cout << "| "; // caracter del bode derecho
             }
         }
         cout << endl;// terminamos linia porque sino imprimiria la siguiente al lado y no abajo
     }
 
-    for (int i = 0; i < ancho * 2 + 1; i++) { // lo mismo de arriba pero para el borde inferior
-        cout << "-"; // caracter para el borde inferior...
-    }
+    bordesSuperiorInferior();
+    
     cout << endl; // damos un espacio de linia despues del bucle for ya que sino la puntuacion la junta con la linia inferior (motivos esteticos)
 
     cout << "Puntuacion: " << punt << endl; // puntuacion que imprime tambien el valor hasta el momento de la variable "punt" 
 }
 
 void userInput() { // funcion para los imputs del usuario usando ' keyboard.h '
-    if (IsAPressed()) dir = LEFT; // no hace falta que comente que hace, simplemente le damos a WASD los valores "estandard" de movimiento
-    else if (IsDPressed()) dir = RIGHT;
-    else if (IsWPressed()) dir = UP;
-    else if (IsSPressed()) dir = DOWN;
+
+    if (IsWPressed()) { // no hace falta que comente que hace, simplemente le damos a WASD los valores "estandard" de movimiento
+        dir = UP;
+    }
+    else if (IsSPressed()) {
+        dir = DOWN;
+    }
+    else if (IsAPressed()) {
+        dir = IZQ;
+    }
+    else if (IsDPressed()) {
+        dir = DER;
+    }
 }
 
 // logica del juego ( *IMPORTANTE*  RECUERDA QUE ESTO ESTARA DENTRO DE UN BUCLE WHILE, ASI QUE NO HACE FALTA TRABAJAR DENTRO DE UN BUCLE)
@@ -106,18 +129,20 @@ void gameLogic() {
         colitaY = colita2Y;
     }
     switch (dir) { // iniciamos un switch (es lo mejor que se me ha ocurrido) para las direcciones, indicando que pasa cuando la variable "dir" esta en alguno de los casos de abajo
-    case LEFT:
-        x--; // en caso de ir a la derecha se movera en negativo en relacion al tablero (ancho)
-        break;
-    case RIGHT:
-        x++; // en caso de ir a la izquierda se movera en positivo en relacion al tablero (ancho)
-        break;
+
     case UP:
         y--; // en caso de ir arriba se movera en negativo en relacion al tablero (alto)
         break;
     case DOWN:
         y++; // en caso de ir abajo se movera en positivo en relacion al tablero (alto)
         break;
+    case IZQ:
+        x--; // en caso de ir a la derecha se movera en negativo en relacion al tablero (ancho)
+        break;
+    case DER:
+        x++; // en caso de ir a la izquierda se movera en positivo en relacion al tablero (ancho)
+        break;
+
     }
 
     /* ESTE BLOQUE ESTABA HECHO PARA DEBUG, ELIMINARLO O COMENTARLO DEBERIA SUPONER QUE LA SERPIENTE MUERA AL TOCAR LOS BORDES DE LA PANTALLA */
@@ -154,7 +179,6 @@ void gameLogic() {
 
 int main() {
 
-    gameSetup(); // inicializamos el juego ( todas las variables necesarias para su funcionamiento)
 
     bool bGameOver = false; // declaramos el estado de false al boolean que funciona para el BUCLLE no para la partida
 
