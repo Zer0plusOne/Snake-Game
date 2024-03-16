@@ -50,4 +50,4 @@ Si te interesa contribuir a este proyecto, por favor, considera:
 
 ## Licencia
 
-Este proyecto está licenciado bajo [INSERTE NOMBRE DE LA LICENCIA AQUÍ]. Para más detalles, ver el archivo LICENSE.
+Este proyecto está licenciado bajo [GPL-3.0] . Para más detalles, ver el archivo LICENSE.
