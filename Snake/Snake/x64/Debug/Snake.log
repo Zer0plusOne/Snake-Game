@@ -1,0 +1,5 @@
+﻿  Engine.cpp
+C:\Users\PC_Zer0\source\repos\Snake\Snake\Engine.cpp(14,1): warning C4010: el comentario de una sola línea contiene un carácter de continuación de línea
+  main.cpp
+  Generando código...
+  Snake.vcxproj -> C:\Users\PC_Zer0\source\repos\Snake\x64\Debug\Snake.exe
