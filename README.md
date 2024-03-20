@@ -7,7 +7,6 @@ Juego clasico del Snake hecho como practica entregable del modulo de programacio
 - Cada fruta consumida por la serpiente aumenta su longitud y la puntuación del jugador.
 
 ## Requisitos Previos
-
 Para compilar y ejecutar este juego, necesitarás:
 
 - Compilador de C++ que soporte C++11 o superior (GCC, Clang, MSVC)
