@@ -46,7 +46,7 @@ Si te interesa contribuir a este proyecto, por favor, considera:
 ## Créditos
 
 - Guillermo Gomez Sanchez: Desarrollador principal
-- ChatGPT & Amigos de StackOverflow: Por proporcionar inspiración y soluciones a problemas específicos.
+- ChatGPT & Giris de StackOverflow: Por proporcionar inspiración y soluciones a problemas específicos.
 
 ## Licencia
 
